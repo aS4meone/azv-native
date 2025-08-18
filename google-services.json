@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "900314246640",
+    "project_id": "azvmotors-1a76c",
+    "storage_bucket": "azvmotors-1a76c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900314246640:android:7f0bf56b4ee4e5d9f2c135",
+        "android_client_info": {
+          "package_name": "com.bahaidahar.azv.azv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_gO4cTBPgenrAcJuE_CsN-4OOL6wJPSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900314246640:android:625eed41f9db1bc5f2c135",
+        "android_client_info": {
+          "package_name": "kz.azv.motors"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_gO4cTBPgenrAcJuE_CsN-4OOL6wJPSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

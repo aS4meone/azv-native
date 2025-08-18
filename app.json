@@ -2,21 +2,41 @@
   "expo": {
     "name": "azv-react",
     "slug": "azv-react",
-    "version": "1.0.0",
+    "version": "3.0.15",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "azvreact",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
+    "jsEngine": "hermes",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Приложение использует камеру для создания фотографий",
+        "NSMicrophoneUsageDescription": "Приложение использует микрофон для записи видео",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.example.azvMotor"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "kz.azv.motors",
+      "versionCode": 19,
+      "googleServicesFile": "./google-services.json",
+      "minSdkVersion": 24,
+      "targetSdkVersion": 35
     },
     "web": {
       "bundler": "metro",
@@ -28,15 +48,36 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/logo.png",
+          "imageWeasth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Приложение использует камеру для создания фотографий",
+          "microphonePermission": "Приложение использует микрофон для записи видео"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/logo.png",
+          "color": "#ffffff"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c206b664-9c6d-4c6f-99bc-0248f12ce9a7"
+      }
+    },
+    "owner": "bahaidahar"
   }
 }
