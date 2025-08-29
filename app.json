@@ -28,6 +28,8 @@
         "CAMERA",
         "RECORD_AUDIO",
         "READ_EXTERNAL_STORAGE",
+        "NSLocationWhenInUseUsageDescription",
+        "ACCESS_FINE_LOCATION",
         "WRITE_EXTERNAL_STORAGE",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"

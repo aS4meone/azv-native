@@ -92,8 +92,8 @@ android {
         applicationId 'kz.azv.motors'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 35
-        versionCode 18
-        versionName "3.0.14"
+        versionCode 19
+        versionName "3.0.15"
     }
     signingConfigs {
         debug {
