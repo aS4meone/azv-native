@@ -1,21 +1,22 @@
-import {useFocusEffect} from "@react-navigation/native";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  AppState,
+  AppStateStatus,
   BackHandler,
   StyleSheet,
   View,
-  AppState,
-  AppStateStatus,
 } from "react-native";
-import {WebView} from "react-native-webview";
-import {AppConstants} from "../constants/AppConstants";
-import {CameraProvider, useCamera} from "../contexts/CameraContext";
-import {FirebaseMessagingService} from "../services/FirebaseMessagingService";
-import {WebViewService, setCameraContext} from "../services/WebViewService";
-import {CameraWrapper} from "./CameraWrapper";
-import {SplashScreen} from "./SplashScreen";
+import { WebView } from "react-native-webview";
+import { AppConstants } from "../constants/AppConstants";
+import { CameraProvider, useCamera } from "../contexts/CameraContext";
+import { FirebaseMessagingService } from "../services/FirebaseMessagingService";
+import { WebViewService, setCameraContext } from "../services/WebViewService";
+import { CameraWrapper } from "./CameraWrapper";
+import { ConnectionManagerWrapper } from "./ConnectionManagerWrapper";
+import { SplashScreen } from "./SplashScreen";
 
 interface AZVWebViewProps {
   onError?: (error: any) => void;
@@ -282,54 +283,60 @@ const AZVWebViewInner: React.FC<AZVWebViewProps> = ({
     [webViewService]
   );
 
+  const handleWebViewReload = useCallback(() => {
+    safeReload(true);
+  }, [safeReload]);
+
   return (
-    <View style={styles.container}>
-      <WebView
-        key={webKey}
-        ref={(ref) => {
-          webViewRef.current = ref;
-          setWebViewRef(ref);
-        }}
-        source={{uri: AppConstants.baseUrl}}
-        style={styles.webview}
-        onLoadStart={handleWebViewLoadStart}
-        onLoadEnd={handleWebViewLoadEnd}
-        onError={handleWebViewError}
-        onHttpError={onHttpError}
-        onMessage={handleMessage}
-        onNavigationStateChange={handleNavigationStateChange}
-        onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
-        javaScriptEnabled={true}
-        onContentProcessDidTerminate={onContentProcessDidTerminate}
-        onRenderProcessGone={onRenderProcessGone}
-        domStorageEnabled={true}
-        startInLoadingState={true}
-        scalesPageToFit={true}
-        allowsBackForwardNavigationGestures={true}
-        allowsLinkPreview={false}
-        allowsInlineMediaPlayback={true}
-        mediaPlaybackRequiresUserAction={false}
-        mixedContentMode="always"
-        thirdPartyCookiesEnabled={true}
-        sharedCookiesEnabled={true}
-        geolocationEnabled
-        userAgent="AZV-React-Native-WebView"
-        renderLoading={() => (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#007AFF"/>
-          </View>
+    <ConnectionManagerWrapper onWebViewReload={handleWebViewReload}>
+      <View style={styles.container}>
+        <WebView
+          key={webKey}
+          ref={(ref) => {
+            webViewRef.current = ref;
+            setWebViewRef(ref);
+          }}
+          source={{uri: AppConstants.baseUrl}}
+          style={styles.webview}
+          onLoadStart={handleWebViewLoadStart}
+          onLoadEnd={handleWebViewLoadEnd}
+          onError={handleWebViewError}
+          onHttpError={onHttpError}
+          onMessage={handleMessage}
+          onNavigationStateChange={handleNavigationStateChange}
+          onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
+          javaScriptEnabled={true}
+          onContentProcessDidTerminate={onContentProcessDidTerminate}
+          onRenderProcessGone={onRenderProcessGone}
+          domStorageEnabled={true}
+          startInLoadingState={true}
+          scalesPageToFit={true}
+          allowsBackForwardNavigationGestures={true}
+          allowsLinkPreview={false}
+          allowsInlineMediaPlayback={true}
+          mediaPlaybackRequiresUserAction={false}
+          mixedContentMode="always"
+          thirdPartyCookiesEnabled={true}
+          sharedCookiesEnabled={true}
+          geolocationEnabled
+          userAgent="AZV-React-Native-WebView"
+          renderLoading={() => (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#007AFF"/>
+            </View>
+          )}
+          setSupportMultipleWindows={false}
+          androidLayerType="hardware"
+        />
+
+        {isLoading && (
+          <SplashScreen onAnimationComplete={handleSplashAnimationComplete}/>
         )}
-        setSupportMultipleWindows={false}
-        androidLayerType="hardware"
-      />
 
-      {isLoading && (
-        <SplashScreen onAnimationComplete={handleSplashAnimationComplete}/>
-      )}
-
-      {/* Custom Camera Screen */}
-      <CameraWrapper/>
-    </View>
+        {/* Custom Camera Screen */}
+        <CameraWrapper/>
+      </View>
+    </ConnectionManagerWrapper>
   );
 };
 

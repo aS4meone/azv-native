@@ -4,6 +4,7 @@ import { AppConstants } from "../constants/AppConstants";
 import { JavaScriptConstants } from "../constants/JavaScriptConstants";
 import { ApiService } from "./ApiService";
 import { CameraService } from "./CameraService";
+import { ConnectionMonitorService } from "./ConnectionMonitorService";
 import {
   LocationError,
   LocationPosition,
@@ -37,6 +38,7 @@ export class WebViewService {
   private locationService: LocationService;
   private urlService: UrlService;
   private apiService: ApiService;
+  private connectionMonitor: ConnectionMonitorService;
   private callbacks: WebViewServiceCallbacks = {};
 
   private constructor() {
@@ -44,6 +46,7 @@ export class WebViewService {
     this.locationService = LocationService.getInstance();
     this.urlService = UrlService.getInstance();
     this.apiService = ApiService.getInstance();
+    this.connectionMonitor = ConnectionMonitorService.getInstance();
   }
 
   public static getInstance(): WebViewService {
@@ -77,6 +80,14 @@ export class WebViewService {
         "🔍 Navigation request:",
         this.urlService.formatUrlForLogging(url)
       );
+
+      // Check connection status before allowing navigation
+      const connectionManager = (global as any).connectionManager;
+      if (connectionManager && !connectionManager.isConnected && connectionManager.isOnErrorScreen) {
+        console.log('🚫 Navigation blocked - no connection, redirecting to error screen');
+        connectionManager.showConnectionError();
+        return false;
+      }
 
       // Handle special URLs - return false and handle asynchronously
       if (AppConstants.isSpecialScheme(url)) {
@@ -371,6 +382,12 @@ export class WebViewService {
     try {
       console.log("🔑 Access token received from WebView:", data);
 
+      // Disable error screen during login/auth process
+      if (data && data !== "null" && data !== "undefined") {
+        console.log("🔐 User authentication detected, disabling error screen");
+        this.connectionMonitor.setShouldShowErrorOnTimeout(false);
+      }
+
       // Handle null or empty data
       if (!data || data === "null" || data === "undefined") {
         console.warn(
@@ -409,6 +426,8 @@ export class WebViewService {
       console.log("🔑 Access token response from WebView localStorage:", data);
 
       if (data && data !== "null" && data !== "undefined") {
+        console.log("🔐 User authentication from localStorage detected, disabling error screen");
+        this.connectionMonitor.setShouldShowErrorOnTimeout(false);
         await AsyncStorage.setItem("access_token", data);
         console.log("✅ Access token stored from localStorage response");
       } else {
@@ -426,6 +445,9 @@ export class WebViewService {
     try {
       console.log("Logout request received from web page");
 
+      // Disable error screen during logout process
+      this.connectionMonitor.setShouldShowErrorOnTimeout(false);
+
       // Clear any stored tokens or user data
       await AsyncStorage.removeItem("fcm_token");
       await AsyncStorage.removeItem("access_token");
@@ -438,6 +460,8 @@ export class WebViewService {
           message: 'Logout completed successfully'
         });
       `);
+      
+      console.log("✅ Logout completed, error screen disabled during logout");
     } catch (error) {
       console.error("Error during logout:", error);
       await this.executeJavaScript(`
@@ -641,6 +665,7 @@ export class WebViewService {
       "🔄 Loading started:",
       this.urlService.formatUrlForLogging(url)
     );
+    this.connectionMonitor.onLoadStart(url);
     this.callbacks.onLoadStart?.(url);
   }
 
@@ -652,6 +677,7 @@ export class WebViewService {
       "✅ Loading finished:",
       this.urlService.formatUrlForLogging(url)
     );
+    this.connectionMonitor.onLoadEnd(url);
     this.callbacks.onLoadEnd?.(url);
 
     // Inject optimization script after page loads
@@ -666,6 +692,7 @@ export class WebViewService {
    */
   public handleError(error: any): void {
     console.error("❌ WebView error:", error);
+    this.connectionMonitor.onLoadError(error);
     this.callbacks.onError?.(error);
   }
 

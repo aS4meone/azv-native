@@ -2,7 +2,7 @@
   "expo": {
     "name": "azv-react",
     "slug": "azv-react",
-    "version": "3.0.15",
+    "version": "3.0.18",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
     "scheme": "azvreact",
@@ -35,7 +35,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "kz.azv.motors",
-      "versionCode": 19,
+      "versionCode": 20,
       "googleServicesFile": "./google-services.json",
       "minSdkVersion": 24,
       "targetSdkVersion": 35
@@ -77,9 +77,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "c206b664-9c6d-4c6f-99bc-0248f12ce9a7"
+        "projectId": "1741b81e-4164-4aaf-a288-b65573eea621"
       }
     },
-    "owner": "bahaidahar"
+    "owner": "meyirman_is_creator"
   }
 }

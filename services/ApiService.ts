@@ -49,6 +49,10 @@ export class ApiService {
           error.response?.status,
           error.response?.data
         );
+        
+        // Handle serious errors by showing manual instructions
+        this.handleApiError(error);
+        
         return Promise.reject(error);
       }
     );
@@ -130,6 +134,10 @@ export class ApiService {
         `Error making authenticated request to ${endpoint}:`,
         error
       );
+      
+      // Show manual instructions for serious API errors
+      this.handleApiError(error);
+      
       return {
         success: false,
         error:
@@ -183,5 +191,41 @@ export class ApiService {
     accessToken: string
   ): Promise<ApiResponse<T>> {
     return this.makeAuthenticatedRequest<T>(endpoint, "DELETE", accessToken);
+  }
+
+  /**
+   * Handle serious API errors by showing connection error screen
+   * Only for server down situations (5xx errors, network failures)
+   */
+  private handleApiError(error: any): void {
+    console.log('🔧 API Error detected, checking if server is down:', error);
+    
+    // Only show connection error when server is actually down/unreachable
+    const isServerDown = 
+      !error.response || // Complete network failure (server unreachable)
+      error.response.status === 500 || // Internal Server Error
+      error.response.status === 502 || // Bad Gateway 
+      error.response.status === 503 || // Service Unavailable
+      error.response.status === 504 || // Gateway Timeout
+      error.code === 'NETWORK_ERROR' ||
+      error.code === 'TIMEOUT' ||
+      error.message?.includes('Network request failed');
+    
+    // Don't show error screen for client errors (4xx) or other issues
+    if (error.response && error.response.status >= 400 && error.response.status < 500) {
+      console.log('🔧 Client error (4xx), not showing connection error screen:', error.response.status);
+      return;
+    }
+    
+    if (isServerDown) {
+      console.log('🔧 Server is down, showing connection error screen');
+      
+      // Use global connection manager if available
+      if ((global as any).connectionManager) {
+        (global as any).connectionManager.showConnectionError();
+      }
+    } else {
+      console.log('🔧 Server is working, not showing connection error screen');
+    }
   }
 }
