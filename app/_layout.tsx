@@ -1,16 +1,17 @@
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { Platform } from "react-native";
 import "react-native-reanimated";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import "react-native-url-polyfill/auto";
 
+import { EdgeToEdgeHandler } from "@/components/EdgeToEdgeHandler";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function RootLayout() {
@@ -36,18 +37,21 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name="index"
-          options={{
-            headerShown: false,
-            title: "AZV Motors",
-          }}
-        />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <EdgeToEdgeHandler>
+        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen
+              name="index"
+              options={{
+                headerShown: false,
+                title: "AZV Motors",
+              }}
+            />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </ThemeProvider>
+      </EdgeToEdgeHandler>
+    </SafeAreaProvider>
   );
 }

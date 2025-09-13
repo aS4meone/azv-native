@@ -2,8 +2,8 @@
   "expo": {
     "name": "azv-react",
     "slug": "azv-react",
-    "version": "3.0.18",
-    "orientation": "portrait",
+    "version": "3.0.19",
+    "orientation": "default",
     "icon": "./assets/images/logo.png",
     "scheme": "azvreact",
     "userInterfaceStyle": "automatic",
@@ -11,10 +11,14 @@
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
+      "requireFullScreen": false,
       "infoPlist": {
         "NSCameraUsageDescription": "Приложение использует камеру для создания фотографий",
         "NSMicrophoneUsageDescription": "Приложение использует микрофон для записи видео",
-        "ITSAppUsesNonExemptEncryption": false
+        "NSPhotoLibraryUsageDescription": "Приложение использует доступ к фотографиям для выбора изображений пользователем и загрузки их в профиль или для создания контента",
+        "NSPhotoLibraryAddUsageDescription": "Приложение сохраняет созданные пользователем фотографии в галерею",
+        "ITSAppUsesNonExemptEncryption": false,
+        "UISupportsDocumentBrowser": true
       },
       "bundleIdentifier": "com.example.azvMotor"
     },
@@ -27,15 +31,22 @@
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO",
-        "READ_EXTERNAL_STORAGE",
-        "NSLocationWhenInUseUsageDescription",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO",
         "ACCESS_FINE_LOCATION",
-        "WRITE_EXTERNAL_STORAGE",
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "ACCESS_COARSE_LOCATION",
+        "INTERNET",
+        "VIBRATE",
+        "SYSTEM_ALERT_WINDOW"
       ],
+      "permissionsPolicy": {
+        "READ_MEDIA_IMAGES": "Приложение использует доступ к фотографиям для выбора изображений пользователем и загрузки их в профиль или для создания контента",
+        "READ_MEDIA_VIDEO": "Приложение использует доступ к видео для выбора видеофайлов пользователем и их обработки",
+        "CAMERA": "Приложение использует камеру для создания фотографий и видео пользователем",
+        "RECORD_AUDIO": "Приложение использует микрофон для записи звука при создании видео"
+      },
       "package": "kz.azv.motors",
-      "versionCode": 20,
+      "versionCode": 21,
       "googleServicesFile": "./google-services.json",
       "minSdkVersion": 24,
       "targetSdkVersion": 35
@@ -61,6 +72,14 @@
         {
           "cameraPermission": "Приложение использует камеру для создания фотографий",
           "microphonePermission": "Приложение использует микрофон для записи видео"
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Приложение использует доступ к фотографиям для выбора изображений пользователем и загрузки их в профиль или для создания контента",
+          "savePhotosPermission": "Приложение сохраняет созданные пользователем фотографии в галерею",
+          "isAccessMediaLocationEnabled": true
         }
       ],
       [
